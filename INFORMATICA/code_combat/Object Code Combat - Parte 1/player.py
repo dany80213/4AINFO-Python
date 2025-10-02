@@ -66,7 +66,7 @@ class Player:
             modifier_value = self.dexterity  if self.weapon.type == "ranged" else self.strength
             damage = self.weapon.get_damage() + self.modifier(modifier_value)
             enemy.take(damage)
-            print(f"⚔️{self.name} attacca {enemy.name} e infligge {damage}  danni!")
+            print(f"⚔️ {self.name} attacca {enemy.name} e infligge {damage}  danni!")
             print(enemy)
 
     def __str__(self):

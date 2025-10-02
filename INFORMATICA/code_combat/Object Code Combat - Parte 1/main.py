@@ -1,5 +1,6 @@
 from player import Player
 from random import randint,choice
+import time 
 
 
 if __name__ == "__main__" :
@@ -16,7 +17,8 @@ if __name__ == "__main__" :
 
     print("=== INIZIO COMBATTIMENTO ===")
 
-    while p1.health > 0 and p2.health > 0:
+    while p1.is_alive() and p2.is_alive():
+        time.sleep(3)
         turno +=1
         print(f"--- Turno {turno} ---")
         players[(turno-1) % 2].attack(players[turno % 2])
