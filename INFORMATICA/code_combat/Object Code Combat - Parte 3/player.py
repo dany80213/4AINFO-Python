@@ -4,15 +4,15 @@ from weapon import Weapon
 from potion import Potion
 
 class Player:
-    def __init__(self, name: str, max_health: int, strength: int, dexterity: int,potions:list[Potion]):
+    def __init__(self, name: str, max_health: int, strength: int, dexterity: int):
         self.__name = name
         self.__max_health = max_health if max_health >= 1 else 1
         self.__health = self.__max_health
-        self.__strength = strength if 1 <= strength <= 20 else randint(1, 20)
-        self.__dexterity = dexterity if 1 <= dexterity <= 20 else randint(1, 20)
+        self.__strength = strength if strength <= 1 and  strength <= 20 else randint(1, 20)
+        self.__dexterity = dexterity if dexterity <= 1 and  dexterity <= 20 else randint(1, 20)
         self.__weapon = None
         self.__buffs = list()
-        self.__potions = potions
+        self.__potions = list()
 
     @property
     def name(self):
@@ -27,18 +27,27 @@ class Player:
         return self.__health
 
     @health.setter
-    def health(self, value):
-        if isinstance(value, Potion):
-            self.__health += value
+    def health(self, info):
+        if isinstance(info[1], Potion):
+            self.__health += info[0]
         else:
             print("La salute può essere modificata solo tramite un oggetto Potion.")
     @property
     def strength(self):
         return self.__strength
+    
+    @strength.setter
+    def strength(self,value):
+        self.__strength -= value
 
     @property
     def dexterity(self):
         return self.__dexterity
+    
+    @dexterity.setter
+    def dexterity(self,value):
+        self.__dexterity -= value
+
 
     @property
     def weapon(self):
@@ -50,7 +59,7 @@ class Player:
     
     @potions.setter
     def potions(self,new_el):
-        if isinstance(new_el):
+        if isinstance(new_el, Potion):
             if len(self.__potions) <=2:
                 self.__potions.append(new_el)
             else: 
@@ -115,12 +124,16 @@ class Player:
             enemy.__take(damage)
             print(f"⚔️ {self.__name} attacca {enemy.name} e infligge {damage}  danni!")
             print(enemy)
+            print(self)
+            print(self.__potions)
     
     def tick_buffs(self):
         for buff in self.__buffs:
             if buff[2] > 0:
                 buff[2] -= 1
-            else: 
+            else:
+                print(self.__buffs)
+                setattr(self,buff[0],buff[1])
                 self.__buffs.remove(buff)
     
     def __calculate_damage(self):
@@ -139,17 +152,22 @@ class Player:
 
     def should_use_potion(self,enemy: "Player"):
         danno_atteso = (enemy.weapon.min_damage + enemy.weapon.max_damage) / 2
-        if any(buff[0] == "heal" for buff in self.__buffs):
+        if any(buff.effect == "heal" for buff in self.__potions):
             healing_potions = [potion for potion in self.__potions if potion.effect == "heal"]
+            print(healing_potions)
             if healing_potions:
-                best_potion = max(healing_potions, key=lambda x: x[1]) 
-                if self.__health < ((35*self.__max_health)/100) or best_potion[1] + self.__health <= danno_atteso:
+                best_potion = max(healing_potions, key=lambda x :x.amount)
+                print(best_potion)
+                if self.__health < ((35*self.__max_health)/100) or best_potion.amount + self.__health <= danno_atteso:
+                    print("OK")
                     self.use_potion(best_potion)
         buffs_potions = [potion for potion in self.__potions if potion.effect in ['buff_str','buff_dex']]
         if buffs_potions:
-            best_potion = max(buffs_potions, key=lambda x: x[1]) 
+            best_potion = max(buffs_potions, key=lambda x: x.amount) 
             if not  self.__buffs and enemy.__health >= ((50*enemy.__max_health)/100):
                 self.use_potion(best_potion)
+                effect = "dexterity" if best_potion.effect == "buff_dex" else "strength"
+                self.__add_buff(effect,best_potion.amount,best_potion.duration)
 
         
 

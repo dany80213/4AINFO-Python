@@ -22,11 +22,12 @@ if __name__ == "__main__" :
     print("=== INIZIO COMBATTIMENTO ===")
 
     while p1.is_alive() and p2.is_alive():
-        time.sleep(3)
+        time.sleep(0)
         turno +=1
         print(f"--- Turno {turno} ---")
         players[(turno-1) % 2].should_use_potion(players[turno % 2])
         players[(turno-1) % 2].attack(players[turno % 2])
+        
         p1.tick_buffs()
         p2.tick_buffs()
     if p1.health == p2.health:

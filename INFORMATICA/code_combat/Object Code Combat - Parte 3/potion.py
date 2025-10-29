@@ -1,5 +1,5 @@
 class Potion():
-    def __init__(self,name:str,effect,amount,duration=None):
+    def __init__(self,name:str,effect,amount,duration=0):
         self.__name = name
         self.__effect = effect if effect in ["heal","buff_str","buff_dex"] else ""
         self.__amount = amount if amount >= 1 else 1
@@ -23,7 +23,7 @@ class Potion():
         self.__effect = value if value in ["heal","buff_str","buff_dex"] else self.__effect
 
     @property
-    def amount(self,value):
+    def amount(self):
         return self.__amount
 
     @amount.setter
@@ -44,11 +44,12 @@ class Potion():
             print({"effect":"heal", "amount":self.__amount, "duration":self.__duration})
         else:
             print({"effect": self.__effect, "amount":self.__amount, "duration":self.__duration})
-            self.__apply_buff(target)
+            stat = "dexterity" if self.__effect == "buff_dex" else "strength"
+            self.__apply_buff(target,stat)
 
     def __apply_heal(self, target):
         if hasattr(target, 'health'):
-            target.health = self.__amount
+            target.health = (self.__amount,self)
 
     def __apply_buff(self,target,stat):
         if hasattr(target,stat):
