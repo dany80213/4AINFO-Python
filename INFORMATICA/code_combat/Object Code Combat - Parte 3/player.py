@@ -124,8 +124,8 @@ class Player:
             enemy.__take(damage)
             print(f"⚔️ {self.__name} attacca {enemy.name} e infligge {damage}  danni!")
             print(enemy)
-            print(self)
-            print(self.__potions)
+            # print(self)
+            # print(self.__potions)
     
     def tick_buffs(self):
         for buff in self.__buffs:
@@ -154,12 +154,12 @@ class Player:
         danno_atteso = (enemy.weapon.min_damage + enemy.weapon.max_damage) / 2
         if any(buff.effect == "heal" for buff in self.__potions):
             healing_potions = [potion for potion in self.__potions if potion.effect == "heal"]
-            print(healing_potions)
+            #print(healing_potions)
             if healing_potions:
                 best_potion = max(healing_potions, key=lambda x :x.amount)
-                print(best_potion)
+                #print(best_potion)
                 if self.__health < ((35*self.__max_health)/100) or best_potion.amount + self.__health <= danno_atteso:
-                    print("OK")
+                    #print("OK")
                     self.use_potion(best_potion)
         buffs_potions = [potion for potion in self.__potions if potion.effect in ['buff_str','buff_dex']]
         if buffs_potions:
