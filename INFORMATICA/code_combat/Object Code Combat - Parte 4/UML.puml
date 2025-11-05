@@ -1,0 +1,60 @@
+@startuml
+
+class Potion {
+    - __name: str
+    - __effect: str
+    - __amount: int
+    - __duration: int
+    + name: str
+    + effect: str
+    + amount: int
+    + duration: int
+    + apply_to(target): dict
+    + __apply_heal(target)
+    + __apply_buff(target, stat: str)
+    + __str__(): str
+}
+
+class Player {
+    - __name: str
+    - __max_health: int
+    - __health: int
+    - __strength: int
+    - __dexterity: int
+    - __weapon: Weapon
+    - __buffs: list
+    - __potions: list
+    + name: str
+    + max_health: int
+    + health: int
+    + strength: int
+    + dexterity: int
+    + weapon: Weapon
+    + potions: list
+    + get_weapons(): list
+    + modifier(value: int): int
+    + is_alive(): bool
+    + attack(enemy: Player): int
+    + tick_buffs()
+    + use_potion(p: Potion): dict
+    + should_use_potion(enemy: Player)
+    + __str__(): str
+}
+
+class Weapon {
+    - __name: str
+    - __min_damage: int
+    - __max_damage: int
+    - __type: str
+    + name: str
+    + min_damage: int
+    + max_damage: int
+    + type: str
+    + get_damage(): int
+    + __str__(): str
+}
+
+Potion --> Player : applies to
+Player --> Weapon : uses
+
+@enduml

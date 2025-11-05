@@ -20,15 +20,9 @@ class Weapon:
 
 
     def __init__(self, name: str, min_damage: int, max_damage: int, type: str):
-        if name < 1:
-            raise ValueError("name must contain a name")
-        if min_damage < 1:
-            raise ValueError("min_damage must be >= 1.")
-        if max_damage < min_damage:
-            raise ValueError("max_damage must be >= min_damage.")
         self.__name = name
-        self.__min_damage = min_damage
-        self.__max_damage = max_damage
+        self.__min_damage = min_damage if min_damage >= 1 else 1
+        self.__max_damage = max_damage if max_damage >= min_damage else min_damage
         self.__type = type if type in ['melee', 'ranged'] else None
         if self.__type is None:
             raise(ValueError("Invalid weapon type. Allowed types are 'melee' or 'ranged'."))
