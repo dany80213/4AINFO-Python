@@ -1,0 +1,17 @@
+{
+  "level_name": "Livello 3: Test comando invalido",
+  "map_size": [10, 10],
+  "rover_start": {
+    "x": 3,
+    "y": 4,
+    "dir": "N"
+  },
+  "obstacles": [
+    [1, 4],
+    [2, 4]
+  ],
+  "samples": [
+    [5, 4]
+  ],
+  "commands": "M,T_DX,X,S"
+}

@@ -1,0 +1,18 @@
+{
+  "level_name": "Livello 1: raccolta semplice",
+  "map_size": [10, 10],
+  "rover_start": {
+    "x": 0,
+    "y": 0,
+    "dir": "E"
+  },
+  "obstacles": [
+    [1, 4],
+    [2, 4],
+    [3, 4]
+  ],
+  "samples": [
+    [3, 5]
+  ],
+  "commands": "M,M,M,T_DX,M,M,M,M,T_SX,M,M,T_SX,M,S"
+}

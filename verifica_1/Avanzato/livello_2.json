@@ -1,0 +1,16 @@
+{
+  "level_name": "Livello 2: Test collisione",
+  "map_size": [10, 10],
+  "rover_start": {
+    "x": 3,
+    "y": 6,
+    "dir": "N"
+  },
+  "obstacles": [
+    [1, 2],
+    [2, 4],
+    [3, 4]
+  ],
+  "samples": [],
+  "commands": "T_SX,M,M"
+}

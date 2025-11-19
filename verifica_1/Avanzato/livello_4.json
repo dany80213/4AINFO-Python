@@ -1,0 +1,16 @@
+{
+  "level_name": "Livello 4: Test collisione",
+  "map_size": [4, 4],
+  "rover_start": {
+    "x": 1,
+    "y": 1,
+    "dir": "N"
+  },
+  "obstacles": [
+    [2, 2]
+  ],
+  "samples": [
+    [3, 5]
+  ],
+  "commands": "T_DX,M,T_DX,M"
+}

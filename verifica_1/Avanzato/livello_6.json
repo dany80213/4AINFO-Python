@@ -1,0 +1,16 @@
+{
+  "level_name": "Livello 4: Test Complesso",
+  "map_size": [4, 4],
+  "rover_start": {
+    "x": 1,
+    "y": 1,
+    "dir": "N"
+  },
+  "obstacles": [
+    [2, 2]
+  ],
+  "samples": [
+    [3, 2]
+  ],
+  "commands": "T_DX,T_DX,M,M,T_SX,M,S,M,T_SX,M,M,T_SX,M,M"
+}

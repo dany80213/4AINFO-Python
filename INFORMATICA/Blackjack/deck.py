@@ -12,7 +12,7 @@ class Deck():
         shuffle(self.__cards)
 
     def pick(self):
-        if len(self.__cards) == 0:
+        if len([self.__cards]) == 0:
             raise EmptyDeckError("The Deck is Empty")
         last_card = self.__cards[-1]
         self.__cards.pop()
