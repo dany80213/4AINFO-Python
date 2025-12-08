@@ -1,0 +1,188 @@
+
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Guida sintetica — Verifica a classi (stile Blackjack) • Tema: Elden Ring</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg:#0b0c10; --ink:#e8eef6; --muted:#c4cfdf; --accent:#7dd3fc; --card:#10141c; --border:#1f2a3a; --code:#0f172a; }
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.55}
+  header{padding:28px 20px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#0c111b,#0a0c12)}
+  h1{font-size:clamp(22px,3vw,32px);margin:0 0 6px}
+  h2{font-size:clamp(18px,2.2vw,24px);margin:26px 0 10px;border-left:4px solid var(--accent);padding-left:10px}
+  h3{font-size:clamp(16px,2vw,20px);margin:18px 0 8px}
+  p,li{color:var(--muted)}
+  .wrap{max-width:960px;margin:0 auto;padding:20px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin:14px 0}
+  .small{font-size:12px;color:#9cb1c9}
+  code{background:#0e1220;color:#cfe6ff;padding:.15em .35em;border-radius:6px}
+  .check li{margin:6px 0}
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+  .badge{display:inline-block;border:1px solid var(--accent);color:#bfe7ff;padding:2px 8px;border-radius:999px;font-size:12px;margin-right:8px}
+  .aside{border-left:3px solid var(--border);padding-left:10px;margin:12px 0}
+  .muted{color:#9cb1c9}
+</style>
+</head>
+<body>
+<header class="wrap">
+  <h1>Guida sintetica — Verifica a classi (stile <em>Card/Deck/Hand/Table</em>)</h1>
+  <p class="small">Tema: <strong>Elden Ring</strong>. Nessuna ereditarietà, nessun <code>*args</code>/<code>**kwargs</code>. Stessa difficoltà e argomenti dei file allegati (Blackjack).</p>
+</header>
+
+<main class="wrap">
+
+<section class="card">
+  <h2>0) Idea generale del gioco (anche per chi non conosce Elden Ring)</h2>
+  <p>Immagina un confronto a “bustine” fra <strong>Giocatore</strong> e <strong>Boss</strong>. C’è una pila (loot) di oggetti fantasy (armi, talismani, incantesimi) ognuno con una <em>forza</em>. Si pesca qualche oggetto a testa e si sommano le forze: chi totalizza di più vince. È la stessa logica del Blackjack che hai già visto, ma con nomi diversi.</p>
+  <ul>
+    <li><span class="badge">Loot</span> = mazzo di oggetti, mescolato, da cui si pesca.</li>
+    <li><span class="badge">Inventory</span> = mano del giocatore/boss con gli oggetti pescati.</li>
+    <li><span class="badge">Encounter</span> = “tavolo” che orchestra la partita (distribuisce, fa i turni, annuncia il vincitore).</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>1) Moduli e classi da creare (stessa architettura)</h2>
+  <div class="grid">
+    <div>
+      <h3>item.py (≈ card.py)</h3>
+      <ul>
+        <li><strong>Classe:</strong> <code>Item</code></li>
+        <li><strong>Privati:</strong> <code>__kind</code> (stringa: “arma”, “talismano”, …), <code>__name</code> (stringa), <code>__power</code> (int &gt; 0)</li>
+        <li><strong>Pubblici:</strong> costruttore con piccole validazioni; getter semplici <code>get_kind()</code>, <code>get_name()</code>, <code>get_power()</code></li>
+        <li><strong>Stampa:</strong> <code>__str__()</code> → <span class="muted">"Uchigatana(11)"</span></li>
+      </ul>
+    </div>
+    <div>
+      <h3>loot.py (≈ deck.py)</h3>
+      <ul>
+        <li><strong>Eccezione:</strong> <code>EmptyLootError</code> (messaggio breve, eredita da <code>Exception</code>)</li>
+        <li><strong>Classe:</strong> <code>LootPool</code> con lista privata <code>__items</code> di <code>Item</code></li>
+        <li><strong>Pubblici:</strong> <code>shuffle()</code>, <code>draw()</code> (se vuoto lancia <code>EmptyLootError</code>), <code>__len__()</code></li>
+        <li><strong>Nota:</strong> fai una <em>copia difensiva</em> della lista passata al costruttore: <code>self.__items = list(items)</code></li>
+      </ul>
+    </div>
+    <div>
+      <h3>inventory.py (≈ hand.py)</h3>
+      <ul>
+        <li><strong>Classe:</strong> <code>Inventory</code></li>
+        <li><strong>Privato:</strong> <code>__items</code> lista di <code>Item</code></li>
+        <li><strong>Pubblici:</strong> <code>add(item)</code>, <code>clear()</code>, <code>total()</code> (somma di <code>get_power()</code>)</li>
+        <li><strong>Dunder:</strong> <code>__len__()</code>, <code>__iter__()</code>, <code>__str__()</code> (elenco o “&lt;vuoto&gt;”)</li>
+      </ul>
+    </div>
+    <div>
+      <h3>encounter.py (≈ blackjackTable.py)</h3>
+      <ul>
+        <li><strong>Classe:</strong> <code>BossEncounter</code> (orchestratore)</li>
+        <li><strong>Privati:</strong> <code>__loot</code> (LootPool), <code>__player</code> (Inventory), <code>__boss</code> (Inventory)</li>
+        <li><strong>Pubblici:</strong>
+          <ul>
+            <li><code>deal_start()</code> — 2 oggetti al player e 2 al boss (se disponibili)</li>
+            <li><code>turn_player()</code>, <code>turn_boss()</code> — 1 pesca a testa (se c’è loot)</li>
+            <li><code>winner()</code> — confronta <code>total()</code>: ritorna "PLAYER" | "BOSS" | "DRAW"</li>
+            <li><code>play_game()</code> — esegue le fasi e restituisce una stringa di log leggibile</li>
+          </ul>
+        </li>
+        <li><strong>Stampa:</strong> <code>__str__()</code> con riepilogo contenuti</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <h2>2) Cosa mettere privato vs pubblico (linee guida rapide)</h2>
+  <ul>
+    <li><strong>Sempre privati</strong> i contenuti interni delle collezioni: <code>__items</code> in Loot/Inventory; anche gli attributi “dati” dell’Item (<code>__kind</code>, <code>__name</code>, <code>__power</code>).</li>
+    <li><strong>Pubblici</strong> i metodi operativi minimi:
+      <ul>
+        <li><code>shuffle()</code>, <code>draw()</code> sul loot; <code>add()</code>, <code>clear()</code>, <code>total()</code> su inventory;</li>
+        <li><code>deal_start()</code>, <code>turn_player()</code>, <code>turn_boss()</code>, <code>winner()</code>, <code>play_game()</code> sul tavolo.</li>
+      </ul>
+    </li>
+    <li><strong>Getter</strong> sull’Item se ti servono (stile identico ai file Blackjack).</li>
+    <li><strong>__str__()</strong> su Item/Inventory/Encounter per debug e output finale pulito.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>3) Flusso di gioco consigliato (logica chiara)</h2>
+  <ol>
+    <li><strong>Preparazione:</strong> costruisci una lista di Item (es. 6–10 oggetti), crea <code>LootPool</code>, chiama <code>shuffle()</code>.</li>
+    <li><strong>Distribuzione iniziale:</strong> <code>deal_start()</code> → 2 oggetti al player, 2 al boss (se il loot finisce, ignora il resto senza errori fatali).</li>
+    <li><strong>Un turno a testa:</strong> <code>turn_player()</code>, poi <code>turn_boss()</code>. Se la pool è vuota, salta senza lanciare errori fuori (gestiscilo con <code>try/except EmptyLootError</code> all’interno dei metodi).</li>
+    <li><strong>Esito:</strong> calcola <code>total()</code> di entrambi, ritorna l’esito con <code>winner()</code>. In <code>play_game()</code> prepara una stringa multilinea con:
+      <ul>
+        <li>contenuto e total del player,</li>
+        <li>contenuto e total del boss,</li>
+        <li>linea finale <code>WINNER: ...</code>.</li>
+      </ul>
+    </li>
+  </ol>
+  <p class="aside">Non servono regole avanzate di Elden Ring: pensa agli Item come “carte con punteggio”.</p>
+</section>
+
+<section class="card">
+  <h2>4) Requisiti minimi (coerenti con i file allegati)</h2>
+  <ul class="check">
+    <li>Eccezione personalizzata <code>EmptyLootError</code> usata in <code>draw()</code>.</li>
+    <li>Costruttori semplici e coerenti (eventuali validazioni base: stringhe non vuote, numeri &gt; 0).</li>
+    <li>Collezioni incapsulate (liste private + metodi pubblici).</li>
+    <li><code>__len__()</code> su Loot/Inventory (opzionale ma utile).</li>
+    <li><code>__iter__()</code> su Inventory per poter fare <code>for item in inventory</code> (coerente con Hand).</li>
+    <li>Output leggibile via <code>__str__()</code> (evita <code>print()</code> dentro i metodi: stampa nel <em>main</em>).</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>5) Suggerimenti pratici per scrivere veloce</h2>
+  <ul>
+    <li>Scrivi prima i <strong>costruttori</strong> con gli <strong>attributi privati</strong>.</li>
+    <li>Aggiungi subito i <strong>metodi minimi</strong> (soprattutto <code>draw()</code>/<code>add()</code>/<code>total()</code>).</li>
+    <li>Implementa presto <strong><code>__str__()</code></strong> per vedere subito cosa stai facendo.</li>
+    <li>Gestisci <strong>EmptyLootError</strong> dentro i metodi di <em>Encounter</em> (non far “esplodere” il programma).</li>
+    <li>Nome variabili chiaro e coerente: <code>__loot</code>, <code>__player</code>, <code>__boss</code>.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>6) Esempi di dati (non codice della soluzione)</h2>
+  <ul>
+    <li>Item possibili: “Uchigatana (11)”, “Spada Lunga (9)”, “Cometa Azur (13)”, “Emblema di Radagon (7)”, “Lancia (8)”.</li>
+    <li>Quantità consigliata nel loot: 6–10 oggetti.</li>
+    <li>Distribuzione iniziale: 2 al player, 2 al boss; poi 1 pesca a testa.</li>
+    <li>Parità ammessa: esito “DRAW”.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>7) Checklist finale (2–3 minuti)</h2>
+  <ul class="check">
+    <li>⦿ Tutti gli attributi interni sono <strong>privati</strong> (<code>__nome</code>).</li>
+    <li>⦿ L’eccezione <code>EmptyLootError</code> è definita e usata in <code>draw()</code>.</li>
+    <li>⦿ <code>LootPool.shuffle()</code> è chiamato prima di giocare.</li>
+    <li>⦿ <code>Inventory.total()</code> somma correttamente i power.</li>
+    <li>⦿ <code>play_game()</code> restituisce una stringa con 3 righe: Player, Boss, Winner.</li>
+    <li>⦿ Nessuna ereditarietà / nessun <code>*args/**kwargs</code>.</li>
+    <li>⦿ Niente <code>print()</code> dentro i metodi: stampa nel file di avvio.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>8) Struttura directory consigliata</h2>
+  <pre><code>item.py
+loot.py
+inventory.py
+encounter.py
+main.py   # solo per provare, non è la soluzione della verifica
+</code></pre>
+</section>
+
+<footer class="wrap small" style="margin-bottom:40px">
+  Guida pensata per compito in classe: sintetica, stessa difficoltà dei file Blackjack forniti, tema Elden Ring senza conoscenze pregresse del gioco.
+</footer>
+
+</main>
+</body>
+</html>

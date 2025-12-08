@@ -1,0 +1,252 @@
+
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Python — Metodi delle Liste, Dizionari (uso e metodi) e Libreria random</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  /* --- Impostazioni di stampa A4 --- */
+  @page { size: A4; margin: 16mm; }
+  @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+  :root { --ink:#0b1320; --mut:#334155; --rule:#cbd5e1; --chip:#e2e8f0; --hl:#f8fafc; --accent:#0ea5e9; }
+  *{box-sizing:border-box}
+  body{font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--ink); margin:0;}
+  .page{max-width: 190mm; margin: 0 auto; padding: 0;}
+  h1{font-size:20pt; margin:0 0 8pt 0;}
+  h2{font-size:14pt; margin:14pt 0 6pt 0; border-bottom:1px solid var(--rule); padding-bottom:2pt;}
+  h3{font-size:11.5pt; margin:10pt 0 3pt 0;}
+  p{margin: 3pt 0 6pt 0; color: var(--mut); font-size:10.5pt; line-height:1.35;}
+  ul,ol{margin: 4pt 0 6pt 18pt; color:var(--mut); font-size:10.5pt; line-height:1.35;}
+  code{background:var(--hl); padding:1px 4px; border-radius:4px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;}
+  pre{background:var(--hl); border:1px solid var(--rule); padding:6pt 8pt; border-radius:6px; overflow:auto; font-size:9.8pt; line-height:1.35; margin:6pt 0;}
+  .grid2{display:grid; grid-template-columns: 1fr 1fr; gap:8pt;}
+  .grid3{display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8pt;}
+  .chip{display:inline-block; background:var(--chip); padding:1pt 6pt; border-radius:999px; font-size:9pt; margin-right:4pt;}
+  .tiny{font-size:9pt; color:#475569;}
+  .callout{border-left:3px solid var(--accent); padding:6pt 8pt; background: #f0f9ff; margin:8pt 0; border-radius:6px;}
+  .tight p, .tight ul, .tight ol{margin: 2pt 0 4pt 0;}
+  .mut{color:#64748b}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1>Python — Metodi delle Liste, Dizionari (uso e metodi) e Libreria <code>random</code></h1>
+  <p class="tiny">Foglio A4 riassuntivo, pronto per la stampa • Sintassi Python 3.x</p>
+
+  <!-- LISTE -->
+  <h2>1) Liste — metodi principali</h2>
+  <div class="grid2">
+    <div>
+      <h3>Inserimento / Modifica</h3>
+      <pre><code># append: aggiunge in coda (O(1) ammort.)
+nums = [1,2]; nums.append(3)   # [1,2,3]
+
+# extend: concatena un iterabile
+nums.extend([4,5])             # [1,2,3,4,5]
+
+# insert: inserisce in posizione (shift a destra)
+nums.insert(1, 99)             # [1,99,2,3,4,5]
+
+# assegnazione slice: sostituzione in blocco
+nums[2:4] = [7,8]              # [1,99,7,8,4,5]</code></pre>
+    </div>
+    <div>
+      <h3>Rimozione / Estrazione</h3>
+      <pre><code># remove: rimuove la PRIMA occorrenza
+nums.remove(99)
+
+# pop: rimuove e ritorna (default: ultima)
+x = nums.pop()      # toglie 5
+y = nums.pop(0)     # toglie 1 dalla posizione 0
+
+# clear: svuota la lista
+nums.clear()</code></pre>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3>Ricerca / Conteggio</h3>
+      <pre><code>nums = [3,7,7,8,10]
+# index: indice della prima occorrenza
+i = nums.index(7)           # 1
+# index(start, stop) opzionali
+j = nums.index(7, 2)        # 2
+
+# count: numero di occorrenze
+c = nums.count(7)           # 2</code></pre>
+    </div>
+    <div>
+      <h3>Ordinamento / Vista</h3>
+      <pre><code># sort: in-place (ordina la lista)
+nums.sort()                 # crescente
+nums.sort(reverse=True)     # decrescente
+
+# key: funzione estrazione chiave
+words = ["aa","b","ccc"]
+words.sort(key=len)         # ["b","aa","ccc"]
+
+# reverse: in-place, inverte ordine
+nums.reverse()
+
+# copy: copia superficiale (shallow)
+p = nums.copy()</code></pre>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3>Operazioni utili</h3>
+      <pre><code># slicing (copia porzione)
+sub = nums[1:4]
+
+# concatenazione
+a = [1,2] + [3,4]           # [1,2,3,4]
+
+# moltiplicazione (ripetizione)
+zeros = [0] * 5             # [0,0,0,0,0]
+
+# membership test
+if 7 in nums: ...
+
+# list comprehension (crea liste)
+squares = [x*x for x in range(5)]</code></pre>
+    </div>
+    <div>
+      <div class="callout tight">
+        <strong>Complessità (indicativa)</strong>
+        <ul>
+          <li><code>append</code>, <code>pop()</code> in coda: &asymp; O(1) ammortizzato</li>
+          <li><code>insert(i,x)</code>, <code>pop(i)</code>, <code>remove(x)</code>: &asymp; O(n)</li>
+          <li><code>sort</code>: &asymp; O(n log n)</li>
+          <li>Indicizzazione <code>lst[i]</code>: O(1)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIZIONARI -->
+  <h2>2) Dizionari — quando usarli & metodi chiave</h2>
+  <p><span class="chip">Quando usarli</span> Usa un <strong>dizionario</strong> quando vuoi mappare una <em>chiave</em> a un <em>valore</em> (lookup veloce), ad esempio: punteggi per nome, inventari per ID, configurazioni per etichetta. A differenza delle liste, l’accesso è per <em>chiave</em>, non per posizione.</p>
+  <div class="grid2">
+    <div>
+      <h3>Creazione & Accesso</h3>
+      <pre><code>user = {"nome":"Matteo", "eta":18}
+x = user["nome"]       # "Matteo" (KeyError se manca)
+y = user.get("scuola", "N/D")  # default se assente
+
+# Aggiunta / aggiornamento
+user["eta"] = 19
+user.update({"citta":"Torino"})</code></pre>
+    </div>
+    <div>
+      <h3>Rimozione & Default</h3>
+      <pre><code># pop: rimuove e ritorna (KeyError se manca, salvo default)
+eta = user.pop("eta", None)
+
+# popitem: rimuove una coppia arbitraria (LIFO da 3.7+)
+k, v = user.popitem()
+
+# setdefault: ottieni chiave o iniziala
+counts = {}
+counts.setdefault("a", 0)
+counts["a"] += 1</code></pre>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3>Viste & Iterazione</h3>
+      <pre><code>d = {"a":1, "b":2}
+keys = d.keys()          # vista dinamica
+vals = d.values()
+items = d.items()
+
+for k, v in d.items():
+    print(k, v)</code></pre>
+    </div>
+    <div>
+      <h3>Copia, pulizia, costruzione</h3>
+      <pre><code># copy: shallow copy
+d2 = d.copy()
+
+# clear: svuota
+d.clear()
+
+# fromkeys: crea con chiavi date
+d3 = {}.fromkeys(["x","y"], 0)  # {"x":0,"y":0}
+
+# dict comprehension
+squares = {x: x*x for x in range(4)}</code></pre>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Scelte tra strutture</strong>
+    <ul class="tight">
+      <li><strong>Lista</strong>: ordine posizionale, duplicati ammessi, ideale per sequenze.</li>
+      <li><strong>Dizionario</strong>: accesso per chiave, lookup veloce, ideale per etichette → valori.</li>
+      <li><strong>Set</strong>: collezione di elementi unici, test d’appartenenza veloce.</li>
+      <li><strong>Tuple</strong>: sequenze immutabili, utili come chiavi di dict o per raggruppare dati fissi.</li>
+    </ul>
+  </div>
+
+  <!-- RANDOM -->
+  <h2>3) Libreria <code>random</code> — funzioni più usate</h2>
+  <div class="grid3">
+    <div>
+      <h3>Valori numerici</h3>
+      <pre><code>import random as rnd
+
+rnd.random()      # float [0.0, 1.0)
+rnd.uniform(a,b)  # float in [a, b]
+rnd.randint(a,b)  # intero in [a, b]
+rnd.randrange(0, 10, 2)  # pari tra 0..8</code></pre>
+    </div>
+    <div>
+      <h3>Sequenze</h3>
+      <pre><code>items = ["a","b","c","d"]
+
+rnd.choice(items)       # 1 elemento
+rnd.choices(items, k=3) # con ripetizione
+rnd.sample(items, 2)    # senza ripetizione
+rnd.shuffle(items)      # in-place</code></pre>
+    </div>
+    <div>
+      <h3>Riproducibilità</h3>
+      <pre><code>rnd.seed(42)  # fissa la sequenza pseudo-casuale
+# stesso seed ⇒ stessi risultati, utile per test</code></pre>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3>Distribuzioni (cenni)</h3>
+      <pre><code>rnd.gauss(mu=0, sigma=1)   # normale
+rnd.expovariate(lambd=1)   # esponenziale
+rnd.triangular(low, high, mode)</code></pre>
+    </div>
+    <div>
+      <h3>Consigli pratici</h3>
+      <ul>
+        <li>Usa <code>shuffle</code> per mescolare liste (es. mazzi).</li>
+        <li><code>choice</code> per estrarre un elemento; <code>sample</code> per estrazioni senza ripetizioni.</li>
+        <li>Imposta <code>seed</code> nei test per risultati ripetibili.</li>
+        <li>Per sicurezza/criptografia usa <code>secrets</code> al posto di <code>random</code>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- NOTE FINALI -->
+  <h2>Note veloci</h2>
+  <ul>
+    <li>Le liste sono mutabili: attenzione a passare riferimenti tra funzioni (usa <code>lst.copy()</code> se serve una copia).</li>
+    <li>I dizionari mantengono l’ordine di inserimento da Python 3.7+.</li>
+    <li><code>random</code> è pseudo-casuale: non usarlo per password/chiavi segrete.</li>
+  </ul>
+
+</div>
+</body>
+</html>

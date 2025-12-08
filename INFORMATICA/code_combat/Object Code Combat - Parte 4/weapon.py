@@ -18,14 +18,29 @@ class Weapon:
             Returns a readable string representation of the weapon, including its name and damage range.
     """
 
-
     def __init__(self, name: str, min_damage: int, max_damage: int, type: str):
+        if not isinstance(name, str):
+            raise TypeError("Weapon name must be a string.")
+        if name == "":
+            raise ValueError("Weapon name cannot be empty.")
+
+        if not isinstance(min_damage, int):
+            raise TypeError("min_damage must be an integer.")
+        if min_damage < 1:
+            raise ValueError("min_damage must be >= 1.")
+
+        if not isinstance(max_damage, int):
+            raise TypeError("max_damage must be an integer.")
+        if max_damage < min_damage:
+            raise ValueError("max_damage must be >= min_damage.")
+
+        if type not in ['melee', 'ranged']:
+            raise ValueError("Invalid weapon type. Allowed types are 'melee' or 'ranged'.")
+
         self.__name = name
-        self.__min_damage = min_damage if min_damage >= 1 else 1
-        self.__max_damage = max_damage if max_damage >= min_damage else min_damage
-        self.__type = type if type in ['melee', 'ranged'] else None
-        if self.__type is None:
-            raise(ValueError("Invalid weapon type. Allowed types are 'melee' or 'ranged'."))
+        self.__min_damage = min_damage
+        self.__max_damage = max_damage
+        self.__type = type
     
     def get_damage(self) -> int:
         return randint(self.__min_damage, self.__max_damage)
@@ -39,14 +54,25 @@ class Weapon:
 
     @name.setter
     def name(self, value: str):
+        if not isinstance(value, str):
+            raise TypeError("Weapon name must be a string.")
+        if value == "":
+            raise ValueError("Weapon name cannot be empty.")
         self.__name = value
+
     @property
     def min_damage(self):
         return self.__min_damage
 
     @min_damage.setter
     def min_damage(self, value: int):
-        self.__min_damage = value if value >= 1 else 1
+        if not isinstance(value, int):
+            raise TypeError("min_damage must be an integer.")
+        if value < 1:
+            raise ValueError("min_damage must be >= 1.")
+        if value > self.__max_damage:
+            raise ValueError("min_damage cannot be greater than max_damage.")
+        self.__min_damage = value
 
     @property
     def max_damage(self):
@@ -54,7 +80,11 @@ class Weapon:
 
     @max_damage.setter
     def max_damage(self, value: int):
-        self.__max_damage = value if value >= self.__min_damage else self.__min_damage
+        if not isinstance(value, int):
+            raise TypeError("max_damage must be an integer.")
+        if value < self.__min_damage:
+            raise ValueError("max_damage must be >= min_damage.")
+        self.__max_damage = value
 
     @property
     def type(self):
@@ -62,17 +92,6 @@ class Weapon:
 
     @type.setter
     def type(self, value: str):
-        if value in ['melee', 'ranged']:
-            self.__type = value
-        else:
+        if value not in ['melee', 'ranged']:
             raise ValueError("Invalid weapon type. Allowed types are 'melee' or 'ranged'.")
-
-
-
-
-
-
-
-
-
-
+        self.__type = value

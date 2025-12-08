@@ -82,7 +82,7 @@ class Player:
         """
 
         try:
-            with open("INFORMATICA/code_combat/Object Code Combat - Parte 1/weapon.json", "r") as file:
+            with open("weapon.json", "r") as file:
                 weapons_data = json.load(file)
             
             weapon_type = "ranged" if self.__dexterity > self.__strength else "melee"

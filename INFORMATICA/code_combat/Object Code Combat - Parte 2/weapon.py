@@ -20,7 +20,7 @@ class Weapon:
 
 
     def __init__(self, name: str, min_damage: int, max_damage: int, type: str):
-        if name < 1:
+        if not  name :
             raise ValueError("name must contain a name")
         if min_damage < 1:
             raise ValueError("min_damage must be >= 1.")
