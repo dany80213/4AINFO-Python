@@ -125,7 +125,6 @@ class Player:
                     type=info["type"],
                 )
             except (KeyError, TypeError, ValueError) as e:
-                # arma malformata nel json → la salto
                 continue
             filtered_weapons.append(w)
 
