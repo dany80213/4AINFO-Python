@@ -1,0 +1,43 @@
+@startuml
+
+' ===== Classe astratta =====
+abstract class Triangolo {
+    - a : float
+    - b : float
+    - c : float
+
+    + perimetro() : float
+    + area() : float
+    + isValido() : bool
+    + tipo() : string
+}
+
+' ===== Specializzazioni =====
+class Equilatero {
+    + area() : float
+}
+
+class Isoscele {
+    + area() : float
+}
+
+class Scaleno {
+    + area() : float
+}
+
+class Rettangolo {
+    + area() : float
+}
+
+class RettangoloIsoscele {
+    + area() : float
+}
+
+' ===== Relazioni di ereditarietà =====
+Triangolo <|-- Equilatero
+Triangolo <|-- Isoscele
+Triangolo <|-- Scaleno
+Triangolo <|-- Rettangolo
+Rettangolo <|-- RettangoloIsoscele
+
+@enduml
