@@ -30,5 +30,5 @@ for drone in stolen_drones:
 
 print("-" * 30)
 print(f"💰 TOTALE RUBATO: {total_credits} Crediti")
-print(f"⏱️ TEMPO USATO: {time_spent} / 60 minuti") # Non considera lo skil_level 
+print(f"⏱️ TEMPO USATO: {time_spent} / 60 minuti") # Non considera  lo skil_level 
 print(f"📦 DRONI VIOLATI: {len(stolen_drones)} su {len(swarm)}")
